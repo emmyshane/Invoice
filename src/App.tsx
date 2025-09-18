@@ -1,12 +1,14 @@
 import React, { useState, useRef } from 'react';
-import { Download, Plus, Trash2, Upload, Save, FolderOpen, Printer, FileText, Building2 } from 'lucide-react';
+import { Download, Plus, Trash2, Upload, Save, FolderOpen, Printer, FileText, Building2, Moon, Sun } from 'lucide-react';
 import InvoiceForm from './components/InvoiceForm';
 import InvoicePreview from './components/InvoicePreview';
 import TimeWidget from './components/TimeWidget';
 import { generatePDF } from './utils/pdfGenerator';
 import { InvoiceData, InvoiceItem } from './types/invoice';
+import { useTheme } from './contexts/ThemeContext';
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const previewRef = useRef<HTMLDivElement>(null);
   
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
@@ -310,8 +312,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200/50 shadow-lg">
+    <div className={`min-h-screen transition-colors duration-300 ${
+      theme === 'dark'
+        ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'
+        : 'bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50'
+    }`}>
+      <div className={`backdrop-blur-sm border-b shadow-lg transition-colors duration-300 ${
+        theme === 'dark'
+          ? 'bg-gray-800/80 border-gray-700/50'
+          : 'bg-white/80 border-gray-200/50'
+      }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div>
@@ -330,8 +340,25 @@ function App() {
             
             <div className="flex items-center gap-3">
               <button
+                onClick={toggleTheme}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${
+                  theme === 'dark'
+                    ? 'border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 hover:border-gray-500'
+                    : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400'
+                }`}
+                title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </button>
+              
+              <button
                 onClick={saveTemplate}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${
+                  theme === 'dark'
+                    ? 'border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 hover:border-gray-500'
+                    : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400'
+                }`}
               >
                 <Save size={16} />
                 Save Template
@@ -340,7 +367,11 @@ function App() {
               <div className="relative template-dropdown">
                 <button
                   onClick={toggleTemplateDropdown}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                  className={`inline-flex items-center gap-2 px-4 py-2.5 border rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${
+                    theme === 'dark'
+                      ? 'border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 hover:border-gray-500'
+                      : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400'
+                  }`}
                 >
                   <FolderOpen size={16} />
                   Load Template
@@ -350,16 +381,28 @@ function App() {
                 </button>
                 
                 {showTemplateDropdown && savedTemplates.length > 0 && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                  <div className={`absolute right-0 mt-2 w-56 rounded-lg shadow-lg border z-50 ${
+                    theme === 'dark'
+                      ? 'bg-gray-800 border-gray-600'
+                      : 'bg-white border-gray-200'
+                  }`}>
                     <div className="py-2">
-                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-100">
+                      <div className={`px-3 py-2 text-xs font-semibold uppercase tracking-wide border-b ${
+                        theme === 'dark'
+                          ? 'text-gray-400 border-gray-700'
+                          : 'text-gray-500 border-gray-100'
+                      }`}>
                         Saved Templates
                       </div>
                       {savedTemplates.map((templateName, index) => (
                         <button
                           key={index}
                           onClick={() => loadTemplate(templateName)}
-                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150 flex items-center gap-2"
+                          className={`w-full text-left px-3 py-2 text-sm transition-colors duration-150 flex items-center gap-2 ${
+                            theme === 'dark'
+                              ? 'text-gray-300 hover:bg-gray-700 hover:text-blue-400'
+                              : 'text-gray-700 hover:bg-blue-50 hover:text-blue-600'
+                          }`}
                         >
                           <FileText size={14} />
                           {templateName}
@@ -372,7 +415,11 @@ function App() {
               
               <button
                 onClick={printPDF}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md ${
+                  theme === 'dark'
+                    ? 'border-gray-600 text-gray-300 bg-gray-700 hover:bg-gray-600 hover:border-gray-500'
+                    : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400'
+                }`}
               >
                 <Printer size={16} />
                 Print
@@ -388,13 +435,17 @@ function App() {
             </div>
           </div>
           
-          <div className="flex border-b border-gray-200/50">
+          <div className={`flex border-b ${
+            theme === 'dark' ? 'border-gray-700/50' : 'border-gray-200/50'
+          }`}>
             <button
               onClick={() => setActiveTab('form')}
               className={`px-8 py-4 text-sm font-semibold border-b-2 transition-all duration-200 ${
                 activeTab === 'form'
                   ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50/50'
+                  : theme === 'dark'
+                    ? 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50/50'
               }`}
             >
               <Building2 className="w-4 h-4 inline mr-2" />
@@ -405,7 +456,9 @@ function App() {
               className={`px-8 py-4 text-sm font-semibold border-b-2 transition-all duration-200 ${
                 activeTab === 'preview'
                   ? 'border-blue-600 text-blue-600 bg-blue-50/50'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50/50'
+                  : theme === 'dark'
+                    ? 'border-transparent text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
+                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:bg-gray-50/50'
               }`}
             >
               <FileText className="w-4 h-4 inline mr-2" />
@@ -430,7 +483,11 @@ function App() {
             onAmountPaidChange={handleAmountPaidChange}
           />
         ) : (
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-10 border border-gray-200/50">
+          <div className={`backdrop-blur-sm rounded-2xl shadow-2xl p-10 border transition-colors duration-300 ${
+            theme === 'dark'
+              ? 'bg-gray-800/90 border-gray-600/50'
+              : 'bg-white/90 border-gray-200/50'
+          }`}>
             <InvoicePreview
               ref={previewRef}
               invoiceData={invoiceData}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Clock, MapPin, ChevronDown, ChevronUp, Move, Minimize2, Maximize2 } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface TimeData {
   time: string;
@@ -14,6 +15,7 @@ interface Position {
 }
 
 const TimeWidget: React.FC = () => {
+  const { theme } = useTheme();
   const [times, setTimes] = useState<TimeData[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
