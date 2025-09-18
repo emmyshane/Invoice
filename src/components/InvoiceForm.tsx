@@ -194,7 +194,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-gray-100 text-gray-700 cursor-not-allowed"
             />
             <p className="text-xs text-gray-500 mt-1">
-              Format: 0001 - Customer Name (updates automatically when customer name is entered)
+              Format: 7284 - Customer Name (updates automatically when customer name is entered)
             </p>
           </div>
           
