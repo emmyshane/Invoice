@@ -86,10 +86,21 @@ function App() {
   }, [showTemplateDropdown]);
 
   const handleInputChange = (field: keyof InvoiceData, value: any) => {
-    setInvoiceData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    setInvoiceData(prev => {
+      const updated = {
+        ...prev,
+        [field]: value
+      };
+      
+      // Auto-generate invoice number when customer name changes
+      if (field === 'customerName' && value) {
+        // Extract numeric part from current invoice number or default to 0001
+        const currentInvoiceNum = prev.invoiceNumber.split(' - ')[0] || '0001';
+        updated.invoiceNumber = `${currentInvoiceNum} - ${value}`;
+      }
+      
+      return updated;
+    });
   };
 
   const handleItemChange = (itemId: string, field: keyof InvoiceItem, value: any) => {

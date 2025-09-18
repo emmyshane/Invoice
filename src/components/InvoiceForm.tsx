@@ -185,14 +185,17 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <label className="block text-sm font-semibold text-gray-800 mb-3">
-              Invoice Number
+              Invoice Number (Auto-generated)
             </label>
             <input
               type="text"
               value={invoiceData.invoiceNumber}
-              onChange={(e) => onInputChange('invoiceNumber', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+              readOnly
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-gray-100 text-gray-700 cursor-not-allowed"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Format: 0001 - Customer Name (updates automatically when customer name is entered)
+            </p>
           </div>
           
           <div>
