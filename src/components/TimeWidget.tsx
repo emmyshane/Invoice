@@ -75,8 +75,8 @@ const TimeWidget: React.FC = () => {
   return (
     <>
       {/* Desktop View */}
-      <div className="hidden lg:block fixed right-4 top-1/2 transform -translate-y-1/2 z-40">
-        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-4 min-w-[280px]">
+      <div className="hidden xl:block fixed right-6 top-32 z-40">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-4 min-w-[260px] max-w-[260px]">
           <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
             <Clock className="w-4 h-4 text-blue-600" />
             <span className="text-sm font-semibold text-gray-800">Live Time Zones</span>
@@ -102,8 +102,8 @@ const TimeWidget: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile View - Dropdown */}
-      <div className="lg:hidden fixed right-4 top-20 z-40">
+      {/* Mobile and Tablet View - Dropdown */}
+      <div className="xl:hidden fixed right-4 top-20 z-40">
         <div className="relative">
           <button
             onClick={() => setIsOpen(!isOpen)}
