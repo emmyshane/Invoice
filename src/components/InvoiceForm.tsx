@@ -234,10 +234,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
             >
               <option value="Credit Card">Credit Card</option>
-              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Debit Card">Debit Card</option>
+              <option value="ACH/Wire Transfer">ACH/Wire Transfer</option>
               <option value="PayPal">PayPal</option>
-              <option value="Check">Check</option>
-              <option value="Cash">Cash</option>
               <option value="Other">Other</option>
             </select>
           </div>
