@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Download, Plus, Trash2, Upload, Save, FolderOpen, Printer, FileText, Building2 } from 'lucide-react';
 import InvoiceForm from './components/InvoiceForm';
 import InvoicePreview from './components/InvoicePreview';
+import TimeWidget from './components/TimeWidget';
 import { generatePDF } from './utils/pdfGenerator';
 import { InvoiceData, InvoiceItem } from './types/invoice';
 
@@ -437,6 +438,9 @@ function App() {
           </div>
         )}
       </div>
+      
+      {/* Time Widget - Only visible in UI, not in PDF */}
+      <TimeWidget />
     </div>
   );
 }
