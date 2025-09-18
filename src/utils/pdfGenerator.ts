@@ -5,7 +5,7 @@ export const generatePDF = async (element: HTMLElement, filename: string) => {
   try {
     // Configure html2canvas for better quality
     const canvas = await html2canvas(element, {
-      scale: 1.5, // Balanced resolution
+      scale: 1, // Match preview display scale
       useCORS: true,
       allowTaint: true,
       backgroundColor: '#ffffff',

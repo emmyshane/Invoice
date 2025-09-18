@@ -28,7 +28,7 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
               <img
                 src={invoiceData.companyLogo}
                 alt="Company Logo"
-                className="h-24 w-24 object-contain"
+                className="h-16 w-16 object-contain"
               />
             )}
             <div>
