@@ -27,6 +27,11 @@ export interface InvoiceData {
   transactionId: string;
   currency: string;
   
+  // Payment status
+  paymentStatus: 'paid' | 'partial' | 'due';
+  amountPaid: number;
+  amountDue: number;
+  
   // Items
   items: InvoiceItem[];
   

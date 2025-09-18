@@ -92,6 +92,39 @@ const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
           </div>
         </div>
 
+        {/* Payment Status */}
+        <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+          <h3 className="text-sm font-bold text-gray-900 mb-3 uppercase tracking-wide">
+            Payment Status
+          </h3>
+          <div className="grid grid-cols-3 gap-6 text-sm">
+            <div>
+              <span className="font-medium text-gray-600">Status:</span>
+              <span className={`ml-2 font-semibold uppercase tracking-wide ${
+                invoiceData.paymentStatus === 'paid' ? 'text-green-700' :
+                invoiceData.paymentStatus === 'partial' ? 'text-yellow-700' : 'text-red-700'
+              }`}>
+                {invoiceData.paymentStatus === 'paid' ? 'PAID' :
+                 invoiceData.paymentStatus === 'partial' ? 'PARTIAL' : 'DUE'}
+              </span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Amount Paid:</span>
+              <span className="ml-2 font-semibold text-gray-900">
+                {CURRENCY_SYMBOLS[invoiceData.currency]}{invoiceData.amountPaid.toFixed(2)}
+              </span>
+            </div>
+            <div>
+              <span className="font-medium text-gray-600">Amount Due:</span>
+              <span className={`ml-2 font-semibold ${
+                invoiceData.amountDue > 0 ? 'text-red-700' : 'text-green-700'
+              }`}>
+                {CURRENCY_SYMBOLS[invoiceData.currency]}{invoiceData.amountDue.toFixed(2)}
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Items Table */}
         <div className="mb-8">
           <table className="w-full border-collapse">

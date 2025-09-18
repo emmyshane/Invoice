@@ -29,6 +29,11 @@ function App() {
     transactionId: '',
     currency: 'USD',
     
+    // Payment status
+    paymentStatus: 'due',
+    amountPaid: 0,
+    amountDue: 100,
+    
     // Items
     items: [
       {
@@ -89,12 +94,17 @@ function App() {
       const tax = subtotal * (prev.taxRate / 100);
       const total = subtotal + tax - prev.discount;
       
+      // Update amount due based on payment status
+      const amountDue = prev.paymentStatus === 'paid' ? 0 :
+                       prev.paymentStatus === 'partial' ? total - prev.amountPaid : total;
+      
       return {
         ...prev,
         items: updatedItems,
         subtotal,
         tax,
-        total
+        total,
+        amountDue
       };
     });
   };
@@ -121,12 +131,17 @@ function App() {
       const tax = subtotal * (prev.taxRate / 100);
       const total = subtotal + tax - prev.discount;
       
+      // Update amount due based on payment status
+      const amountDue = prev.paymentStatus === 'paid' ? 0 :
+                       prev.paymentStatus === 'partial' ? total - prev.amountPaid : total;
+      
       return {
         ...prev,
         items: updatedItems,
         subtotal,
         tax,
-        total
+        total,
+        amountDue
       };
     });
   };
@@ -136,11 +151,16 @@ function App() {
       const tax = prev.subtotal * (taxRate / 100);
       const total = prev.subtotal + tax - prev.discount;
       
+      // Update amount due based on payment status
+      const amountDue = prev.paymentStatus === 'paid' ? 0 :
+                       prev.paymentStatus === 'partial' ? total - prev.amountPaid : total;
+      
       return {
         ...prev,
         taxRate,
         tax,
-        total
+        total,
+        amountDue
       };
     });
   };
@@ -149,10 +169,62 @@ function App() {
     setInvoiceData(prev => {
       const total = prev.subtotal + prev.tax - discount;
       
+      // Update amount due based on payment status
+      const amountDue = prev.paymentStatus === 'paid' ? 0 :
+                       prev.paymentStatus === 'partial' ? total - prev.amountPaid : total;
+      
       return {
         ...prev,
         discount,
-        total
+        total,
+        amountDue
+      };
+    });
+  };
+
+  const handlePaymentStatusChange = (status: 'paid' | 'partial' | 'due') => {
+    setInvoiceData(prev => {
+      let amountPaid = 0;
+      let amountDue = prev.total;
+      
+      if (status === 'paid') {
+        amountPaid = prev.total;
+        amountDue = 0;
+      } else if (status === 'partial') {
+        amountPaid = prev.amountPaid;
+        amountDue = prev.total - amountPaid;
+      } else {
+        amountPaid = 0;
+        amountDue = prev.total;
+      }
+      
+      return {
+        ...prev,
+        paymentStatus: status,
+        amountPaid,
+        amountDue
+      };
+    });
+  };
+
+  const handleAmountPaidChange = (amountPaid: number) => {
+    setInvoiceData(prev => {
+      const amountDue = prev.total - amountPaid;
+      let paymentStatus: 'paid' | 'partial' | 'due';
+      
+      if (amountPaid >= prev.total) {
+        paymentStatus = 'paid';
+      } else if (amountPaid > 0) {
+        paymentStatus = 'partial';
+      } else {
+        paymentStatus = 'due';
+      }
+      
+      return {
+        ...prev,
+        amountPaid,
+        amountDue: Math.max(0, amountDue),
+        paymentStatus
       };
     });
   };
@@ -300,6 +372,8 @@ function App() {
             onTaxChange={handleTaxChange}
             onDiscountChange={handleDiscountChange}
             onLogoUpload={handleLogoUpload}
+            onPaymentStatusChange={handlePaymentStatusChange}
+            onAmountPaidChange={handleAmountPaidChange}
           />
         ) : (
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl p-10 border border-gray-200/50">

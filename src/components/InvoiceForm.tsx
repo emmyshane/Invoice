@@ -11,6 +11,8 @@ interface InvoiceFormProps {
   onTaxChange: (taxRate: number) => void;
   onDiscountChange: (discount: number) => void;
   onLogoUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onPaymentStatusChange: (status: 'paid' | 'partial' | 'due') => void;
+  onAmountPaidChange: (amountPaid: number) => void;
 }
 
 const InvoiceForm: React.FC<InvoiceFormProps> = ({
@@ -22,6 +24,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
   onTaxChange,
   onDiscountChange,
   onLogoUpload,
+  onPaymentStatusChange,
+  onAmountPaidChange,
 }) => {
   return (
     <div className="space-y-10">
@@ -249,6 +253,83 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Payment Status */}
+      <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-8 border border-gray-200/50 hover:shadow-2xl transition-all duration-300">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="p-2 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-lg">
+            <FileText className="w-5 h-5 text-white" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900">Payment Status</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-3">
+              Payment Status
+            </label>
+            <select
+              value={invoiceData.paymentStatus}
+              onChange={(e) => onPaymentStatusChange(e.target.value as 'paid' | 'partial' | 'due')}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+            >
+              <option value="due">Due</option>
+              <option value="partial">Partially Paid</option>
+              <option value="paid">Fully Paid</option>
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-3">
+              Amount Paid ({CURRENCY_SYMBOLS[invoiceData.currency]})
+            </label>
+            <input
+              type="number"
+              min="0"
+              max={invoiceData.total}
+              step="0.01"
+              value={invoiceData.amountPaid}
+              onChange={(e) => onAmountPaidChange(parseFloat(e.target.value) || 0)}
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 bg-gray-50/50 hover:bg-white"
+              disabled={invoiceData.paymentStatus === 'due'}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-semibold text-gray-800 mb-3">
+              Amount Due ({CURRENCY_SYMBOLS[invoiceData.currency]})
+            </label>
+            <div className="w-full px-4 py-3 border border-gray-300 rounded-xl shadow-sm bg-gray-100 text-gray-700 font-semibold">
+              {CURRENCY_SYMBOLS[invoiceData.currency]}{invoiceData.amountDue.toFixed(2)}
+            </div>
+          </div>
+        </div>
+        
+        {/* Payment Status Indicator */}
+        <div className="mt-6 p-4 rounded-xl border-2 border-dashed">
+          {invoiceData.paymentStatus === 'paid' && (
+            <div className="flex items-center gap-2 text-green-700 bg-green-50 p-3 rounded-lg">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="font-medium">Fully Paid - No outstanding balance</span>
+            </div>
+          )}
+          {invoiceData.paymentStatus === 'partial' && (
+            <div className="flex items-center gap-2 text-yellow-700 bg-yellow-50 p-3 rounded-lg">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <span className="font-medium">
+                Partially Paid - {CURRENCY_SYMBOLS[invoiceData.currency]}{invoiceData.amountDue.toFixed(2)} remaining
+              </span>
+            </div>
+          )}
+          {invoiceData.paymentStatus === 'due' && (
+            <div className="flex items-center gap-2 text-red-700 bg-red-50 p-3 rounded-lg">
+              <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+              <span className="font-medium">
+                Payment Due - {CURRENCY_SYMBOLS[invoiceData.currency]}{invoiceData.amountDue.toFixed(2)} outstanding
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
