@@ -60,6 +60,7 @@ function App() {
 
   const [activeTab, setActiveTab] = useState<'form' | 'preview'>('form');
   const [savedTemplates, setSavedTemplates] = useState<string[]>([]);
+  const [showTemplateDropdown, setShowTemplateDropdown] = useState(false);
 
   // Load saved templates on mount
   React.useEffect(() => {
@@ -68,6 +69,21 @@ function App() {
       setSavedTemplates(JSON.parse(templates));
     }
   }, []);
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (showTemplateDropdown && !target.closest('.template-dropdown')) {
+        setShowTemplateDropdown(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showTemplateDropdown]);
 
   const handleInputChange = (field: keyof InvoiceData, value: any) => {
     setInvoiceData(prev => ({
@@ -250,19 +266,20 @@ function App() {
     }
   };
 
-  const loadTemplate = () => {
+  const loadTemplate = (templateName: string) => {
+    const template = localStorage.getItem(`template-${templateName}`);
+    if (template) {
+      setInvoiceData(JSON.parse(template));
+      setShowTemplateDropdown(false);
+    }
+  };
+
+  const toggleTemplateDropdown = () => {
     if (savedTemplates.length === 0) {
       alert('No saved templates found!');
       return;
     }
-    
-    const templateName = prompt(`Choose template:\n${savedTemplates.map((t, i) => `${i + 1}. ${t}`).join('\n')}\n\nEnter template name:`);
-    if (templateName && savedTemplates.includes(templateName)) {
-      const template = localStorage.getItem(`template-${templateName}`);
-      if (template) {
-        setInvoiceData(JSON.parse(template));
-      }
-    }
+    setShowTemplateDropdown(!showTemplateDropdown);
   };
 
   const downloadPDF = async () => {
@@ -308,13 +325,38 @@ function App() {
                 Save Template
               </button>
               
-              <button
-                onClick={loadTemplate}
-                className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                <FolderOpen size={16} />
-                Load Template
-              </button>
+              <div className="relative template-dropdown">
+                <button
+                  onClick={toggleTemplateDropdown}
+                  className="inline-flex items-center gap-2 px-4 py-2.5 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  <FolderOpen size={16} />
+                  Load Template
+                  <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {showTemplateDropdown && savedTemplates.length > 0 && (
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="py-2">
+                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wide border-b border-gray-100">
+                        Saved Templates
+                      </div>
+                      {savedTemplates.map((templateName, index) => (
+                        <button
+                          key={index}
+                          onClick={() => loadTemplate(templateName)}
+                          className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-150 flex items-center gap-2"
+                        >
+                          <FileText size={14} />
+                          {templateName}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
               
               <button
                 onClick={printPDF}
