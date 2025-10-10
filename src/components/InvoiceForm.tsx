@@ -213,11 +213,31 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
 
       {/* Ship To Information */}
       <div className={sectionClasses}>
-        <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
-            <Building2 className="w-5 h-5 text-white" />
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg">
+              <Building2 className="w-5 h-5 text-white" />
+            </div>
+            <h2 className={titleClasses}>Ship To</h2>
           </div>
-          <h2 className={titleClasses}>Ship To</h2>
+          
+          {/* Toggle for same as billing address */}
+          <div className="flex items-center gap-3">
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={invoiceData.shipToBillToSame}
+                onChange={(e) => onInputChange('shipToBillToSame', e.target.checked)}
+                className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <span className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                Same as Bill To
+              </span>
+            </label>
+            <div className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+              <span className="italic">Toggle on if shipping and billing addresses are the same</span>
+            </div>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
@@ -226,9 +246,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             </label>
             <input
               type="text"
-              value={invoiceData.shippingName}
+              value={invoiceData.shipToBillToSame ? invoiceData.customerName : invoiceData.shippingName}
               onChange={(e) => onInputChange('shippingName', e.target.value)}
-              className={inputClasses}
+              disabled={invoiceData.shipToBillToSame}
+              className={invoiceData.shipToBillToSame ? readOnlyInputClasses : inputClasses}
             />
           </div>
           
@@ -238,9 +259,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             </label>
             <input
               type="email"
-              value={invoiceData.shippingEmail}
+              value={invoiceData.shipToBillToSame ? invoiceData.customerEmail : invoiceData.shippingEmail}
               onChange={(e) => onInputChange('shippingEmail', e.target.value)}
-              className={inputClasses}
+              disabled={invoiceData.shipToBillToSame}
+              className={invoiceData.shipToBillToSame ? readOnlyInputClasses : inputClasses}
             />
           </div>
           
@@ -249,10 +271,11 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               Shipping Address
             </label>
             <textarea
-              value={invoiceData.shippingAddress}
+              value={invoiceData.shipToBillToSame ? invoiceData.customerAddress : invoiceData.shippingAddress}
               onChange={(e) => onInputChange('shippingAddress', e.target.value)}
               rows={3}
-              className={`${inputClasses} resize-none`}
+              disabled={invoiceData.shipToBillToSame}
+              className={`${invoiceData.shipToBillToSame ? readOnlyInputClasses : inputClasses} resize-none`}
             />
           </div>
           
@@ -262,9 +285,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             </label>
             <input
               type="tel"
-              value={invoiceData.shippingPhone}
+              value={invoiceData.shipToBillToSame ? invoiceData.customerPhone : invoiceData.shippingPhone}
               onChange={(e) => onInputChange('shippingPhone', e.target.value)}
-              className={inputClasses}
+              disabled={invoiceData.shipToBillToSame}
+              className={invoiceData.shipToBillToSame ? readOnlyInputClasses : inputClasses}
             />
           </div>
         </div>

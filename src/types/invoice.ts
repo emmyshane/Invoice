@@ -25,6 +25,7 @@ export interface InvoiceData {
   shippingAddress: string;
   shippingPhone: string;
   shippingEmail: string;
+  shipToBillToSame: boolean;
   
   // Invoice details
   invoiceNumber: string;

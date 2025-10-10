@@ -30,6 +30,7 @@ function App() {
     shippingAddress: '',
     shippingPhone: '',
     shippingEmail: '',
+    shipToBillToSame: false,
     
     // Invoice details
     invoiceNumber: '7284',
@@ -106,6 +107,25 @@ function App() {
         // Extract numeric part from current invoice number or default to 7284
         const currentInvoiceNum = prev.invoiceNumber.split(' - ')[0] || '7284';
         updated.invoiceNumber = `${currentInvoiceNum} - ${value}`;
+      }
+      
+      // Handle toggle for same billing and shipping address
+      if (field === 'shipToBillToSame' && value === true) {
+        // Copy billing information to shipping when toggle is enabled
+        updated.shippingName = prev.customerName;
+        updated.shippingEmail = prev.customerEmail;
+        updated.shippingAddress = prev.customerAddress;
+        updated.shippingPhone = prev.customerPhone;
+      }
+      
+      // If billing information changes and toggle is enabled, update shipping accordingly
+      if (prev.shipToBillToSame &&
+          (field === 'customerName' || field === 'customerEmail' ||
+           field === 'customerAddress' || field === 'customerPhone')) {
+        if (field === 'customerName') updated.shippingName = value;
+        if (field === 'customerEmail') updated.shippingEmail = value;
+        if (field === 'customerAddress') updated.shippingAddress = value;
+        if (field === 'customerPhone') updated.shippingPhone = value;
       }
       
       return updated;
