@@ -314,7 +314,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               className={readOnlyInputClasses}
             />
             <p className={`text-xs mt-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              Format: 7284 - Customer Name (updates automatically when customer name is entered)
+              Format: 7290 - Customer Name (updates automatically when customer name is entered)
             </p>
           </div>
           
