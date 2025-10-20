@@ -33,7 +33,7 @@ function App() {
     shipToBillToSame: false,
     
     // Invoice details
-    invoiceNumber: '7284',
+    invoiceNumber: '7290',
     invoiceDate: new Date().toISOString().split('T')[0],
     paymentMode: 'Credit Card',
     transactionId: '',
@@ -104,8 +104,8 @@ function App() {
       
       // Auto-generate invoice number when customer name changes
       if (field === 'customerName' && value) {
-        // Extract numeric part from current invoice number or default to 7284
-        const currentInvoiceNum = prev.invoiceNumber.split(' - ')[0] || '7284';
+        // Extract numeric part from current invoice number or default to 7290
+        const currentInvoiceNum = prev.invoiceNumber.split(' - ')[0] || '7290';
         updated.invoiceNumber = `${currentInvoiceNum} - ${value}`;
       }
       
